@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "ai-workshop-02-poc",
+  "short_name": "AI Workshop 02 POC",
+  "description": "AI Workshop 02 POC Extension",
+  "version": "0.0.0",
+  "icons": {
+    "16": "favicon.ico",
+    "48": "logo.svg",
+    "128": "logo.svg"
+  },
+  "author": "Leniolabs LLC",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Vite + React Chrome Extension Example"
+  },
+  "permissions": [],
+  "host_permissions": ["*://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  }
+}
