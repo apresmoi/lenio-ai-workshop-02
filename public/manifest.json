@@ -14,7 +14,7 @@
     "default_popup": "index.html",
     "default_title": "Vite + React Chrome Extension Example"
   },
-  "permissions": [],
+  "permissions": ["storage", "activeTab"],
   "host_permissions": ["*://*/*"],
   "content_scripts": [
     {

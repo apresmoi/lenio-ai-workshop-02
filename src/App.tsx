@@ -15,17 +15,15 @@ import {
   ListItemAvatar,
   LinearProgress,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import { Settings } from "@mui/icons-material";
+import { useChromeStorageVariable } from "./hooks/useChromeStorageVariable";
 
 function App() {
   const [showConfig, setShowConfig] = React.useState(false);
-  const [apiKey, setApiKey] = React.useState("");
+  const [apiKey, setApiKey] = useChromeStorageVariable("apikey", "");
   const [loading, setLoading] = React.useState(true);
-
-  const handleApiKeyChange = (event) => {
-    setApiKey(event.target.value);
-  };
 
   const techList = [
     { name: "React", rating: 8 },
@@ -53,52 +51,76 @@ function App() {
         />
       </Card>
 
-      {loading && (
-        <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-          <CircularProgress />
-        </Box>
-      )}
-
       {showConfig && (
         <Card>
-          <CardHeader title="Settings" sx={{ textAlign: "center" }} />
           <CardContent>
-            <Box sx={{ p: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                mt: 2,
+              }}
+            >
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                Settings
+              </Typography>
               <TextField
-                id="api-key-input"
-                label="API Key"
+                label="API key"
+                variant="outlined"
+                size="small"
                 value={apiKey}
-                onChange={handleApiKeyChange}
-                fullWidth
+                onChange={(e) => setApiKey(e.target.value)}
+                sx={{ mb: 1 }}
               />
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button onClick={() => setShowConfig(false)} sx={{ mr: 1 }}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setShowConfig(false)}
+                >
+                  Save
+                </Button>
+              </Box>
             </Box>
           </CardContent>
         </Card>
       )}
 
-      {!showConfig && !loading && (
-        <Card>
-          <CardHeader
-            avatar={
-              <Avatar aria-label="avatar">
-                <img src="https://via.placeholder.com/150" alt="avatar" />
-              </Avatar>
-            }
-            title="John Doe"
-            subheader="Software Engineer"
-          />
-          <CardContent>
-            {techList.map((tech) => (
-              <Box key={tech.name} sx={{ mb: 1 }}>
-                <Typography variant="subtitle1">{tech.name}</Typography>
-                <LinearProgress
-                  variant="determinate"
-                  value={tech.rating * 10}
-                />
-              </Box>
-            ))}
-          </CardContent>
-        </Card>
+      {!showConfig && (
+        <>
+          {loading && (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+              <CircularProgress />
+            </Box>
+          )}
+
+          {!loading && (
+            <Card>
+              <CardHeader
+                avatar={
+                  <Avatar aria-label="avatar">
+                    <img src="https://via.placeholder.com/150" alt="avatar" />
+                  </Avatar>
+                }
+                title="John Doe"
+                subheader="Software Engineer"
+              />
+              <CardContent>
+                {techList.map((tech) => (
+                  <Box key={tech.name} sx={{ mb: 1 }}>
+                    <Typography variant="subtitle1">{tech.name}</Typography>
+                    <LinearProgress
+                      variant="determinate"
+                      value={tech.rating * 10}
+                    />
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+        </>
       )}
 
       <Box sx={{ textAlign: "center", p: 2 }}>
