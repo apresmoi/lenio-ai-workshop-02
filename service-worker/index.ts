@@ -22,7 +22,14 @@ function getProfileFromContent(tabId: number): Promise<string> {
   });
 }
 
+function setLoading(loading: boolean): Promise<void> {
+  return new Promise((resolve) => {
+    chrome.storage.sync.set({ loading }, () => resolve());
+  });
+}
+
 async function processTab(tabId: number) {
+  await setLoading(true);
   const apikey = await getAPIKey();
   const profile = await getProfileFromContent(tabId);
   const classification = await getOpenAIClassification(
@@ -30,8 +37,12 @@ async function processTab(tabId: number) {
     ["React", "Angular"],
     apikey
   );
+  await setLoading(false);
 
-  console.log(classification);
+  chrome.runtime.sendMessage({
+    command: "set:profile",
+    profile: JSON.parse(classification),
+  });
 }
 
 chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {

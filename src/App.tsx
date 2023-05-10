@@ -25,8 +25,18 @@ function App() {
   const [showConfig, setShowConfig] = React.useState(false);
   const [apiKey, setApiKey] = useChromeStorageVariable("apikey", "");
   const [loading, setLoading] = useChromeStorageVariable("loading", false);
-
   const [profile, setProfile] = React.useState<IProfile>(null);
+
+  React.useEffect(() => {
+    console.log("useEffect")
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      console.log(request);
+      if (request.command === "set:profile") {
+        setProfile(request.profile);
+        setLoading(false);
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -45,7 +55,6 @@ function App() {
           }
         />
       </Card>
-
       {showConfig && (
         <Card>
           <CardContent>
