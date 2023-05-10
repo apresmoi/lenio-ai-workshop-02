@@ -41,7 +41,7 @@ async function processTab(tabId: number) {
 
   chrome.runtime.sendMessage({
     command: "set:profile",
-    profile: JSON.parse(classification),
+    profile: classification,
   });
 }
 

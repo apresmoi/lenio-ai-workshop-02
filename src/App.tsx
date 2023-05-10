@@ -23,16 +23,21 @@ import { IProfile } from "./types";
 
 function App() {
   const [showConfig, setShowConfig] = React.useState(false);
+  const [lastProfile, setLastProfile] = useChromeStorageVariable(
+    "lastProfile",
+    ""
+  );
   const [apiKey, setApiKey] = useChromeStorageVariable("apikey", "");
   const [loading, setLoading] = useChromeStorageVariable("loading", false);
-  const [profile, setProfile] = React.useState<IProfile>(null);
+
+  const profile = React.useMemo(() => {
+    return lastProfile ? JSON.parse(lastProfile) : null;
+  }, [lastProfile]);
 
   React.useEffect(() => {
-    console.log("useEffect")
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log(request);
       if (request.command === "set:profile") {
-        setProfile(request.profile);
+        setLastProfile(request.profile);
         setLoading(false);
       }
     });
