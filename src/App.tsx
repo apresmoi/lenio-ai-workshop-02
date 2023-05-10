@@ -19,19 +19,14 @@ import {
 } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import { useChromeStorageVariable } from "./hooks/useChromeStorageVariable";
+import { IProfile } from "./types";
 
 function App() {
   const [showConfig, setShowConfig] = React.useState(false);
   const [apiKey, setApiKey] = useChromeStorageVariable("apikey", "");
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useChromeStorageVariable("loading", false);
 
-  const techList = [
-    { name: "React", rating: 8 },
-    { name: "Vue", rating: 7 },
-    { name: "TypeScript", rating: 9 },
-  ];
-
-  const name = "John Doe";
+  const [profile, setProfile] = React.useState<IProfile>(null);
 
   return (
     <>
@@ -96,7 +91,19 @@ function App() {
             </Box>
           )}
 
-          {!loading && (
+          {!loading && !profile && (
+            <>
+              <Card>
+                <CardContent>
+                  <Typography sx={{ textAlign: "center" }} variant="subtitle1">
+                    There is no profile loaded yet.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {!loading && profile && (
             <Card>
               <CardHeader
                 avatar={
@@ -104,11 +111,11 @@ function App() {
                     <img src="https://via.placeholder.com/150" alt="avatar" />
                   </Avatar>
                 }
-                title="John Doe"
-                subheader="Software Engineer"
+                title={profile.name}
+                subheader={profile.role}
               />
               <CardContent>
-                {techList.map((tech) => (
+                {profile.technologies.map((tech) => (
                   <Box key={tech.name} sx={{ mb: 1 }}>
                     <Typography variant="subtitle1">{tech.name}</Typography>
                     <LinearProgress
