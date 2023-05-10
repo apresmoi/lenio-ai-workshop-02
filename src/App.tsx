@@ -14,12 +14,14 @@ import {
   Typography,
   ListItemAvatar,
   LinearProgress,
+  CircularProgress,
 } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 
 function App() {
   const [showConfig, setShowConfig] = React.useState(false);
   const [apiKey, setApiKey] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
 
   const handleApiKeyChange = (event) => {
     setApiKey(event.target.value);
@@ -51,6 +53,12 @@ function App() {
         />
       </Card>
 
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
       {showConfig && (
         <Card>
           <CardHeader title="Settings" sx={{ textAlign: "center" }} />
@@ -68,7 +76,7 @@ function App() {
         </Card>
       )}
 
-      {!showConfig && (
+      {!showConfig && !loading && (
         <Card>
           <CardHeader
             avatar={
@@ -92,6 +100,12 @@ function App() {
           </CardContent>
         </Card>
       )}
+
+      <Box sx={{ textAlign: "center", p: 2 }}>
+        <Typography variant="subtitle2">
+          This is for education purposes only. Powered by OpenAI
+        </Typography>
+      </Box>
     </>
   );
 }
